@@ -16,4 +16,3 @@ logs/
 *.pid
 node_modules/
 dev.env
-.idea/

@@ -74,8 +74,19 @@ public interface CourseService {
      */
     List<CourseResponse> getPopularCourses(int limit);
 
-
+    /**
+     * Updates the average rating and total number of reviews for a course.
+     *
+     * @param courseId         course ID
+     * @param newAverageRating newly calculated average rating
+     * @param totalReviews     updated total number of reviews
+     */
     void updateCourseRating(UUID courseId, double newAverageRating, int totalReviews);
 
+    /**
+     * Increments the enrollment count of a course by one.
+     *
+     * @param courseId course ID
+     */
     void incrementEnrollmentCount(UUID courseId);
 }

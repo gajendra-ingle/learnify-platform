@@ -60,4 +60,36 @@ class SectionRepositoryTest {
         List<Section> result = sectionRepository.findByCourseIdOrderByOrderIndex(courseId);
         assertThat(result).isEmpty();
     }
+    @DisplayName("Should return empty list when no sections found for course")
+    void shouldReturnEmptyListWhenNoSections() {
+        UUID courseId = UUID.randomUUID();
+
+        List<Section> result = sectionRepository
+                .findByCourseIdOrderByOrderIndex(courseId);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should only return sections for the given course")
+    void shouldOnlyReturnSectionsForGivenCourse() {
+        UUID course1 = UUID.randomUUID();
+        UUID course2 = UUID.randomUUID();
+
+        Section s1 = new Section();
+        s1.setCourseId(course1);
+        s1.setOrderIndex(1);
+
+        Section s2 = new Section();
+        s2.setCourseId(course2);
+        s2.setOrderIndex(1);
+
+        sectionRepository.saveAll(List.of(s1, s2));
+
+        List<Section> result = sectionRepository
+                .findByCourseIdOrderByOrderIndex(course1);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getCourseId()).isEqualTo(course1);
+    }
 }

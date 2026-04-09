@@ -1,4 +1,8 @@
 package com.learnify.lesson.entity;
 
-public class LessonType {
+public enum LessonType {
+    VIDEO,
+    TEXT,
+    QUIZ,
+    ASSIGNMENT
 }

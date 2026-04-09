@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import jakarta.persistence.EntityManager;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -19,34 +21,40 @@ class LessonRepositoryTest {
     private LessonRepository lessonRepository;
 
     @Autowired
-    private SectionRepository sectionRepository;
+    private EntityManager entityManager;
+
 
     @Test
-    @DisplayName("Should return lessons ordered by orderIndex for a section")
+    @DisplayName("Should return lessons ordered by orderIndex")
     void shouldFindLessonsBySectionIdOrdered() {
-        // Create Section
-        Section section = Section.builder()
-                .title("Section 1")
-                .courseId(UUID.randomUUID())
-                .orderIndex(1)
-                .build();
-        sectionRepository.save(section);
+        UUID sectionId = UUID.randomUUID();
 
-        // Create Lessons
+        Section section = Section.builder()
+                .id(sectionId)
+                .title("Section 1")
+                .build();
+
+        entityManager.persist(section);
+
         Lesson lesson1 = Lesson.builder()
+                .id(UUID.randomUUID())
                 .section(section)
+                .title("Lesson 1")
                 .orderIndex(2)
                 .build();
 
         Lesson lesson2 = Lesson.builder()
+                .id(UUID.randomUUID())
                 .section(section)
+                .title("Lesson 2")
                 .orderIndex(1)
                 .build();
 
-        lessonRepository.saveAll(List.of(lesson1, lesson2));
+        entityManager.persist(lesson1);
+        entityManager.persist(lesson2);
+        entityManager.flush();
 
-        List<Lesson> result = lessonRepository
-                .findBySectionIdOrderByOrderIndex(section.getId());
+        List<Lesson> result = lessonRepository.findBySectionIdOrderByOrderIndex(sectionId);
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getOrderIndex()).isEqualTo(1);
@@ -54,13 +62,10 @@ class LessonRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should return empty list when no lessons found")
-    void shouldReturnEmptyListWhenNoLessons() {
+    @DisplayName("Should return empty list when no lessons exist")
+    void shouldReturnEmptyList() {
         UUID sectionId = UUID.randomUUID();
-
-        List<Lesson> result = lessonRepository
-                .findBySectionIdOrderByOrderIndex(sectionId);
-
+        List<Lesson> result = lessonRepository.findBySectionIdOrderByOrderIndex(sectionId);
         assertThat(result).isEmpty();
     }
 }

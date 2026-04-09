@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import jakarta.persistence.EntityManager;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -17,23 +19,34 @@ class SectionRepositoryTest {
     @Autowired
     private SectionRepository sectionRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
+
     @Test
-    @DisplayName("Should return sections ordered by orderIndex for a course")
+    @DisplayName("Should return sections ordered by orderIndex")
     void shouldFindSectionsByCourseIdOrdered() {
         UUID courseId = UUID.randomUUID();
 
-        Section section1 = new Section();
-        section1.setCourseId(courseId);
-        section1.setOrderIndex(2);
+        Section s1 = Section.builder()
+                .id(UUID.randomUUID())
+                .courseId(courseId)
+                .title("Section 1")
+                .orderIndex(2)
+                .build();
 
-        Section section2 = new Section();
-        section2.setCourseId(courseId);
-        section2.setOrderIndex(1);
+        Section s2 = Section.builder()
+                .id(UUID.randomUUID())
+                .courseId(courseId)
+                .title("Section 2")
+                .orderIndex(1)
+                .build();
 
-        sectionRepository.saveAll(List.of(section1, section2));
+        entityManager.persist(s1);
+        entityManager.persist(s2);
+        entityManager.flush();
 
-        List<Section> result = sectionRepository
-                .findByCourseIdOrderByOrderIndex(courseId);
+        List<Section> result = sectionRepository.findByCourseIdOrderByOrderIndex(courseId);
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getOrderIndex()).isEqualTo(1);
@@ -41,6 +54,12 @@ class SectionRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return empty list when no sections found")
+    void shouldReturnEmptySections() {
+        UUID courseId = UUID.randomUUID();
+        List<Section> result = sectionRepository.findByCourseIdOrderByOrderIndex(courseId);
+        assertThat(result).isEmpty();
+    }
     @DisplayName("Should return empty list when no sections found for course")
     void shouldReturnEmptyListWhenNoSections() {
         UUID courseId = UUID.randomUUID();

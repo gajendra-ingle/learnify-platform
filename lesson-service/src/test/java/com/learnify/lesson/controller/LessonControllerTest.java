@@ -22,6 +22,8 @@ import java.util.UUID;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(LessonController.class)
@@ -134,5 +136,15 @@ class LessonControllerTest {
 
         verify(lessonService).getLessonById(lessonId);
         verifyNoMoreInteractions(lessonService);
+    }
+
+    @Test
+    void shouldGetLessonById() throws Exception {
+        UUID lessonId = UUID.randomUUID();
+        Mockito.when(lessonService.getLessonById(lessonId))
+                .thenReturn(new LessonResponse());
+
+        mockMvc.perform(get("/api/lessons/{id}", lessonId))
+                .andExpect(status().isOk());
     }
 }

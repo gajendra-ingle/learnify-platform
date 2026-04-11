@@ -6,15 +6,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
-        <relativePath/>
+        <groupId>com.learnify</groupId>
+        <artifactId>learnify-platform</artifactId>
+        <version>1.0.0</version>
     </parent>
 
-    <groupId>com.learnify</groupId>
     <artifactId>lesson-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <java.version>17</java.version>

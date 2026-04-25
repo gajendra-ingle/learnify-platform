@@ -1,3 +1,24 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: config-server
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/configs
+        git:
+          uri: ${CONFIG_GIT_URI:https://github.com/gajendra-ingle/learnify-configs}
+          default-label: main
+          clone-on-start: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

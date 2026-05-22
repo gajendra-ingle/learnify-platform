@@ -1,4 +1,10 @@
 package com.learnify.payment.entity;
 
-public class PaymentMethod {
+public enum PaymentMethod {
+    CREDIT_CARD,
+    DEBIT_CARD,
+    PAYPAL,
+    STRIPE,
+    BANK_TRANSFER,
+    CRYPTO
 }

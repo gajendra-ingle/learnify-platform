@@ -45,7 +45,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
                 event.getCourseId(), event.getStudentId());
     }
 
-    // to-do
+    // todo
     @Override
     public void sendPaymentReceipt(com.learnify.notification.event.PaymentSuccessEvent event) {
 
